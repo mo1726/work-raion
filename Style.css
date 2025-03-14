@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Mogra&family=Open+Sans:ital,wght@0,300..800;1,300..800&display=swap');
+
 
 html, body {
   margin: 0;
@@ -14,7 +14,7 @@ body {
     font-family: "Open Sans", sans-serif;
     margin: 0;
     padding: 0;
-    background:url(/images/IMG_5734.png);
+    background:url(/images/IMG_5734.webp);
     color: #333;
     overflow: hidden;
     width: 100vw;
@@ -46,8 +46,12 @@ header {
     color: white;
     text-decoration: none;
     font-size: 24px;
+    transition: color 0.5s ease; /* Smooth color transition */
     
 
+}
+.seri a:hover {
+    color: #333;
 }
 
 header .icon {

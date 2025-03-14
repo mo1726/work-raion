@@ -1,85 +1,3 @@
-// Mock IP-to-country mapping
-const ipToCountryMap = {
-    "192.168.1.1": "Morocco",
-    "192.168.1.2": "Russia",
-    "192.168.1.3": "United States",
-    "192.168.1.4": "United Kingdom",
-    "192.168.1.5": "China",
-    "192.168.1.6": "Germany",
-    "192.168.1.7": "France",
-    "192.168.1.8": "Italy",
-    "192.168.1.9": "Spain",
-    "192.168.1.10": "Canada",
-    "192.168.1.11": "Australia",
-    "192.168.1.12": "Brazil",
-    "192.168.1.13": "India",
-    "192.168.1.14": "Japan",
-    "192.168.1.15": "South Korea",
-    "192.168.1.16": "Mexico",
-    "192.168.1.17": "Saudi Arabia",
-    "192.168.1.18": "South Africa",
-    "192.168.1.19": "Egypt",
-    "192.168.1.20": "Nigeria",
-    "192.168.1.21": "Argentina",
-    "192.168.1.22": "Chile",
-    "192.168.1.23": "Colombia",
-    "192.168.1.24": "Peru",
-    "192.168.1.25": "Venezuela",
-    "192.168.1.26": "Sweden",
-    "192.168.1.27": "Norway",
-    "192.168.1.28": "Finland",
-    "192.168.1.29": "Denmark",
-    "192.168.1.30": "Netherlands",
-    "192.168.1.31": "Belgium",
-    "192.168.1.32": "Switzerland",
-    "192.168.1.33": "Austria",
-    "192.168.1.34": "Poland",
-    "192.168.1.35": "Czech Republic",
-    "192.168.1.36": "Hungary",
-    "192.168.1.37": "Ukraine",
-    "192.168.1.38": "Turkey",
-    "192.168.1.39": "Iran",
-    "192.168.1.40": "Pakistan",
-    "192.168.1.41": "Bangladesh",
-    "192.168.1.42": "Thailand",
-    "192.168.1.43": "Vietnam",
-    "192.168.1.44": "Malaysia",
-    "192.168.1.45": "Singapore",
-    "192.168.1.46": "Philippines",
-    "192.168.1.47": "New Zealand",
-    "192.168.1.48": "Israel",
-    "192.168.1.49": "United Arab Emirates",
-    "192.168.1.50": "Qatar",
-    "192.168.1.51": "Kuwait",
-    "192.168.1.52": "Oman",
-    "192.168.1.53": "Iraq",
-    "192.168.1.54": "Syria",
-    "192.168.1.55": "Lebanon",
-    "192.168.1.56": "Jordan",
-    "192.168.1.57": "Yemen",
-    "192.168.1.58": "Afghanistan",
-    "192.168.1.59": "Kazakhstan",
-    "192.168.1.60": "Uzbekistan",
-    "192.168.1.61": "Tajikistan",
-    "192.168.1.62": "Kyrgyzstan",
-    "192.168.1.63": "Turkmenistan",
-    "192.168.1.64": "Azerbaijan",
-    "192.168.1.65": "Georgia",
-    "192.168.1.66": "Armenia",
-    "192.168.1.67": "Belarus",
-    "192.168.1.68": "Moldova",
-    "192.168.1.69": "Romania",
-    "192.168.1.70": "Bulgaria",
-    "192.168.1.71": "Serbia",
-    "192.168.1.72": "Croatia",
-    "192.168.1.73": "Slovenia",
-    "192.168.1.74": "Bosnia and Herzegovina",
-    "192.168.1.75": "Albania",
-    "192.168.1.76": "North Macedonia",
-    "192.168.1.77": "Kosovo",
-    "192.168.1.78": "Montenegro",
-};
-
 // Retrieve values from localStorage
 let score = localStorage.getItem("score") ? parseInt(localStorage.getItem("score")) : 0;
 let totalClicks = localStorage.getItem("totalClicks") ? parseInt(localStorage.getItem("totalClicks")) : 300000;
@@ -92,6 +10,11 @@ const scoreElement = document.getElementById("score");
 const totalMiawElement = document.getElementById("totalMiaw");
 const total = document.getElementById("TOTAL");
 const leaderboardElement = document.getElementById("leaderboard");
+const CA = document.getElementById("CA");
+CA.textContent = CA.textContent.toUpperCase();
+
+
+
 
 // Initialize totalClicks and score
 totalMiawElement.textContent = totalClicks;
@@ -126,7 +49,7 @@ function pressHandler(event) {
     localStorage.setItem("totalClicks", totalClicks);
     scoreElement.textContent = score;
     totalMiawElement.textContent = totalClicks;
-    updateScoreByLocation();
+
 }
 
 // Release handler: revert to the original state.
@@ -150,70 +73,7 @@ if (document.PointerEvent) {
     document.addEventListener("mouseup", releaseHandler);
 }
 
-// Fetch user's IP address
-async function getUserIP() {
-    try {
-        const response = await fetch("https://api.ipify.org?format=json");
-        const data = await response.json();
-        return data.ip;
-    } catch (error) {
-        console.error("Error fetching IP:", error);
-        return null;
-    }
-}
 
-// Geolocation logic with mock IP support
-async function updateScoreByLocation() {
-    const userIP = await getUserIP();
-    console.log("User IP:", userIP); // Debugging
-
-    // Check if the user's IP is in the mock mapping
-    if (userIP && ipToCountryMap[userIP]) {
-        const countryName = ipToCountryMap[userIP];
-        console.log("Mock country detected:", countryName); // Debugging
-
-        let country = countries.find(c => c.name === countryName);
-        if (country) {
-            country.score++;
-            localStorage.setItem("totalClicks", totalClicks);
-            localStorage.setItem("countries", JSON.stringify(countries));
-            localStorage.setItem("score", score);
-            scoreElement.textContent = score;
-            totalMiawElement.textContent = totalClicks;
-            renderLeaderboard();
-        } else {
-            console.log("Country not found in the list:", countryName);
-        }
-    } else {
-        // Fallback to real geolocation logic
-        if (navigator.geolocation) {
-            navigator.geolocation.getCurrentPosition(async (position) => {
-                const { latitude, longitude } = position.coords;
-                const response = await fetch(`https://api.bigdatacloud.net/data/reverse-geocode-client?latitude=${latitude}&longitude=${longitude}&localityLanguage=en`);
-                const data = await response.json();
-                const countryName = data.countryName;
-                console.log("Real country detected:", countryName); // Debugging
-
-                let country = countries.find(c => c.name === countryName);
-                if (country) {
-                    country.score++;
-                    localStorage.setItem("totalClicks", totalClicks);
-                    localStorage.setItem("countries", JSON.stringify(countries));
-                    localStorage.setItem("score", score);
-                    scoreElement.textContent = score;
-                    totalMiawElement.textContent = totalClicks;
-                    renderLeaderboard();
-                } else {
-                    console.log("Country not found in the list:", countryName);
-                }
-            }, (error) => {
-                console.error("Geolocation error:", error); // Debugging
-            });
-        } else {
-            console.log("Geolocation is not supported by this browser.");
-        }
-    }
-}
 
 // Leaderboard logic
 const storedCountries = localStorage.getItem("countries");
@@ -324,9 +184,9 @@ const countries = storedCountries ? JSON.parse(storedCountries) : [
 ];
 
 if (!storedCountries) {
-    const totalClicksToDistribute = 300000;
-    const baseClicks = 1000;
-    const maxBonus = 4000;
+    const totalClicksToDistribute = 3000000;
+    const baseClicks = 2000;
+    const maxBonus = 6000;
     const totalCountries = countries.length;
     let remainingClicks = totalClicksToDistribute;
 
@@ -397,3 +257,10 @@ total.addEventListener("click", () => {
         leaderboardElement.style.display = "none";
     }
 });
+// Modify the click handler
+total.addEventListener("click", () => {
+    if (!leaderboardTable.innerHTML) {
+      renderLeaderboard();
+    }
+    // Toggle visibility
+  });

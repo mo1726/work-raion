@@ -264,3 +264,11 @@ total.addEventListener("click", () => {
     }
     // Toggle visibility
   });
+  document.addEventListener('keydown', function(event) {
+    if (event.ctrlKey && (event.key === 'u' || event.key === 'U' || event.key === 'I' || event.key === 'i')) {
+        event.preventDefault();
+    }
+});
+document.addEventListener('contextmenu', function(event) {
+    event.preventDefault();
+});
